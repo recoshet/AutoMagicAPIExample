@@ -4,9 +4,8 @@
 ## Требования
   - Приложение [automagic](https://automagic4android.com/)
   - Python 3.8 (Flask, pandas, simplejson)
-  - Прямые руки
 
 ## Запуск
-- Поменять везде host на ваш IP адрес или дмоен, где находится бэкенд
+- Поменять везде host на ваш IP адрес или дмоен, где находится backend (машина на которой будет крутиться python скрипт)
 - Импортировать Flow в automagic
 - В консоле ```python3 WhatsAppBackendExample.py```

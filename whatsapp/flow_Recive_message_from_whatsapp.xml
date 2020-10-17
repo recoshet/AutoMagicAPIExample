@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<data version="1.37.0">
+  <trigger type="notification_status_bar_displayed">
+    <useDefaultName>true</useDefaultName>
+    <name>Notification on Statusbar Displayed: com.whatsapp</name>
+    <enabled>true</enabled>
+    <packageNameFilter>com.whatsapp</packageNameFilter>
+    <textMatchField>TEXT</textMatchField>
+    <textMatchType>CONTAINS_TEXT</textMatchType>
+    <textFilter></textFilter>
+    <ignoreRegular>false</ignoreRegular>
+    <ignoreOngoing>false</ignoreOngoing>
+  </trigger>
+  <action type="http_request">
+    <useDefaultName>false</useDefaultName>
+    <name>HTTP Request: POST http://{host}:{port}/recive_message application/x-www-form-urlencoded body={encodeURL(body)} store in responseй</name>
+    <url>http://{host}:{port}/recive_message</url>
+    <verifyCertificates>false</verifyCertificates>
+    <basicAuthentication>false</basicAuthentication>
+    <username></username>
+    <clientCert>false</clientCert>
+    <clientCertPath></clientCertPath>
+    <httpMethod>POST</httpMethod>
+    <networkType>DEFAULT</networkType>
+    <httpContentType>X_WWW_FORM_URLENCODED</httpContentType>
+    <contentType>text/plain</contentType>
+    <generalTextData></generalTextData>
+    <formFieldList>body={encodeURL(body)}</formFieldList>
+    <uploadFieldName>upload_field</uploadFieldName>
+    <uploadFilePath></uploadFilePath>
+    <timeout>60000</timeout>
+    <setCustomHTTPHeaders>false</setCustomHTTPHeaders>
+    <customHTTPHeaders></customHTTPHeaders>
+    <storeInVariable>true</storeInVariable>
+    <variable>response</variable>
+    <path>/storage/emulated/0/Download/file.bin</path>
+    <followRedirects>true</followRedirects>
+  </action>
+  <action type="notification_screen">
+    <useDefaultName>true</useDefaultName>
+    <name>Notification on Screen: otvet: {response} (long)</name>
+    <showText>true</showText>
+    <text>otvet: {response}</text>
+    <widgetName></widgetName>
+    <width></width>
+    <height></height>
+    <stretchToFillArea>false</stretchToFillArea>
+    <opacity>1.00</opacity>
+    <durationLong>true</durationLong>
+    <customPosition>false</customPosition>
+    <gravityType>TOP_LEFT</gravityType>
+    <xOffset>0</xOffset>
+    <yOffset>0</yOffset>
+  </action>
+  <action type="perform_action_notification_status_bar">
+    <useDefaultName>true</useDefaultName>
+    <name>Perform Action on Notification on Statusbar: Click button Пометить как прочитанное</name>
+    <actionType>BUTTON</actionType>
+    <button>Пометить как прочитанное</button>
+    <wearableAction>Reply</wearableAction>
+    <wearableActionInput>Hi!</wearableActionInput>
+  </action>
+  <action type="script">
+    <useDefaultName>true</useDefaultName>
+    <name>Script: global_listNotify = newList();</name>
+    <script>global_listNotify = newList();</script>
+  </action>
+  <action type="script">
+    <useDefaultName>true</useDefaultName>
+    <name>Script: host = '192.168.5.175'; port = 8083;</name>
+    <script>host = '192.168.5.175';
+port = 8083;</script>
+  </action>
+  <action type="script">
+    <useDefaultName>true</useDefaultName>
+    <name>Script: if (isEmpty(global_listNotyfy)) { addElement(global_listNotify, notification_text); } else { global_listNotify = newList(notification_text); } log(global_listNotify); body = toJSON(global_listNotify); log(body)</name>
+    <script>if (isEmpty(global_listNotyfy)) {
+addElement(global_listNotify, notification_text);
+} else {
+global_listNotify = newList(notification_text);
+}
+log(global_listNotify);
+
+body = toJSON(global_listNotify);
+log(body)</script>
+  </action>
+  <flow type="flow">
+    <name>Recive message from whatsapp</name>
+    <group>Recoshet</group>
+    <enabled>true</enabled>
+    <executionPolicy>QUEUE</executionPolicy>
+    <triggercontainer id="t1" x="70.0" y="-52.499985">
+      <trigger>Notification on Statusbar Displayed: com.whatsapp</trigger>
+    </triggercontainer>
+    <actioncontainer id="t2" x="70.0" y="437.50012">Perform Action on Notification on Statusbar: Click button Пометить как прочитанное</actioncontainer>
+    <actioncontainer id="t3" x="280.0" y="892.5">Notification on Screen: otvet: {response} (long)</actioncontainer>
+    <actioncontainer id="t4" x="280.00006" y="332.5">Script: host = '192.168.5.175'; port = 8083;</actioncontainer>
+    <actioncontainer id="t5" x="70.0" y="157.49998">Script: if (isEmpty(global_listNotyfy)) { addElement(global_listNotify, notification_text); } else { global_listNotify = newList(notification_text); } log(global_listNotify); body = toJSON(global_listNotify); log(body)</actioncontainer>
+    <actioncontainer id="t6" x="279.99997" y="542.49994">HTTP Request: POST http://{host}:{port}/recive_message application/x-www-form-urlencoded body={encodeURL(body)} store in responseй</actioncontainer>
+    <actioncontainer id="t7" x="279.99997" y="717.5">Script: global_listNotify = newList();</actioncontainer>
+    <connection from="t1" to="t5" type="NORMAL" sourcePosition="SOUTH" targetPosition="NORTH" />
+    <connection from="t4" to="t6" type="NORMAL" sourcePosition="SOUTH" targetPosition="NORTH" />
+    <connection from="t5" to="t2" type="NORMAL" sourcePosition="SOUTH" targetPosition="NORTH" />
+    <connection from="t5" to="t4" type="NORMAL" sourcePosition="SOUTH" targetPosition="NORTH" />
+    <connection from="t6" to="t7" type="NORMAL" sourcePosition="SOUTH" targetPosition="NORTH" />
+    <connection from="t7" to="t3" type="NORMAL" sourcePosition="SOUTH" targetPosition="NORTH" />
+  </flow>
+</data>

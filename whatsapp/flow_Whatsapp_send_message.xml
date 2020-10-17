@@ -1,0 +1,161 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<data version="1.37.0">
+  <trigger type="periodic_timer">
+    <useDefaultName>true</useDefaultName>
+    <name>Periodic Timer: every 5s</name>
+    <enabled>false</enabled>
+    <frequency>5000</frequency>
+    <wakeDevice>true</wakeDevice>
+    <fixedTimes>false</fixedTimes>
+    <limitTimeRange>false</limitTimeRange>
+    <weekday>Mon</weekday>
+    <weekday>Tue</weekday>
+    <weekday>Wed</weekday>
+    <weekday>Thu</weekday>
+    <weekday>Fri</weekday>
+    <weekday>Sat</weekday>
+    <weekday>Sun</weekday>
+    <hourFrom>8</hourFrom>
+    <minuteFrom>0</minuteFrom>
+    <hourTo>17</hourTo>
+    <minuteTo>0</minuteTo>
+    <allowInDeviceIdle>false</allowInDeviceIdle>
+    <likeAlarmClock>false</likeAlarmClock>
+  </trigger>
+  <condition type="expression">
+    <useDefaultName>true</useDefaultName>
+    <name>Expression: result["status"] == "ok"</name>
+    <expression>result["status"] == "ok"</expression>
+  </condition>
+  <action type="control_user_interface">
+    <useDefaultName>false</useDefaultName>
+    <name>Control UI whatasp send</name>
+    <script>sleep(300);
+attempts = 0;
+maxAttemps = 5;
+isEntryFieldExsist = false;
+while(!isEntryFieldExsist &amp;&amp; attempts &lt;= maxAttemps) {
+isEntryFieldExsist = existsElementById("com.whatsapp:id/entry");
+attempts = attempts + 1;
+sleep(1000);
+}
+
+isTextSended = false;
+if (isEntryFieldExsist) {
+setText2ById("com.whatsapp:id/entry", text);
+isTextSended = clickById("com.whatsapp:id/send");
+}
+
+
+back();
+sleep(300);
+back();</script>
+  </action>
+  <action type="http_request">
+    <useDefaultName>true</useDefaultName>
+    <name>HTTP Request: GET http://{host}:{port}/queue   store in response</name>
+    <url>http://{host}:{port}/queue</url>
+    <verifyCertificates>false</verifyCertificates>
+    <basicAuthentication>false</basicAuthentication>
+    <username></username>
+    <clientCert>false</clientCert>
+    <clientCertPath></clientCertPath>
+    <httpMethod>GET</httpMethod>
+    <networkType>DEFAULT</networkType>
+    <httpContentType>X_WWW_FORM_URLENCODED</httpContentType>
+    <contentType>text/plain</contentType>
+    <generalTextData></generalTextData>
+    <formFieldList>Lastname=XYZ,Firstname=ABC</formFieldList>
+    <uploadFieldName>upload_field</uploadFieldName>
+    <uploadFilePath></uploadFilePath>
+    <timeout>60000</timeout>
+    <setCustomHTTPHeaders>false</setCustomHTTPHeaders>
+    <customHTTPHeaders></customHTTPHeaders>
+    <storeInVariable>true</storeInVariable>
+    <variable>response</variable>
+    <path>/storage/emulated/0/Download/file.bin</path>
+    <followRedirects>true</followRedirects>
+  </action>
+  <action type="http_request">
+    <useDefaultName>true</useDefaultName>
+    <name>HTTP Request: POST http://{host}:{port}/set_status application/x-www-form-urlencoded id={result["id"]} store in response</name>
+    <url>http://{host}:{port}/set_status</url>
+    <verifyCertificates>false</verifyCertificates>
+    <basicAuthentication>false</basicAuthentication>
+    <username></username>
+    <clientCert>false</clientCert>
+    <clientCertPath></clientCertPath>
+    <httpMethod>POST</httpMethod>
+    <networkType>DEFAULT</networkType>
+    <httpContentType>X_WWW_FORM_URLENCODED</httpContentType>
+    <contentType>text/plain</contentType>
+    <generalTextData></generalTextData>
+    <formFieldList>id={result["id"]}</formFieldList>
+    <uploadFieldName>upload_field</uploadFieldName>
+    <uploadFilePath></uploadFilePath>
+    <timeout>60000</timeout>
+    <setCustomHTTPHeaders>false</setCustomHTTPHeaders>
+    <customHTTPHeaders></customHTTPHeaders>
+    <storeInVariable>true</storeInVariable>
+    <variable>response</variable>
+    <path>/storage/emulated/0/Download/file.bin</path>
+    <followRedirects>true</followRedirects>
+  </action>
+  <action type="open_browser_url">
+    <useDefaultName>true</useDefaultName>
+    <name>Open URL in Browser: https://wa.me/{phone}</name>
+    <url>https://wa.me/{phone}</url>
+    <explicitComponent>false</explicitComponent>
+    <packageName></packageName>
+    <className></className>
+    <appName></appName>
+  </action>
+  <action type="script">
+    <useDefaultName>true</useDefaultName>
+    <name>Script: host = '192.168.5.175'; port = 8083;</name>
+    <script>host = '192.168.5.175';
+port = 8083;</script>
+  </action>
+  <action type="script">
+    <useDefaultName>true</useDefaultName>
+    <name>Script: result = fromJSON(response); text = ""; phone = ""; if(result["status"] == "ok") { text = result["message"]; phone = result["phone"]; }</name>
+    <script>result = fromJSON(response);
+text = "";
+phone = "";
+if(result["status"] == "ok") {
+  text = result["message"];
+  phone = result["phone"];
+}</script>
+  </action>
+  <action type="show_home_screen">
+    <useDefaultName>true</useDefaultName>
+    <name>Show Home Screen</name>
+    <pageEnabled>false</pageEnabled>
+    <page>1</page>
+  </action>
+  <flow type="flow">
+    <name>Whatsapp send message</name>
+    <group>Recoshet</group>
+    <enabled>false</enabled>
+    <executionPolicy>SKIP</executionPolicy>
+    <triggercontainer id="t1" x="70.0" y="-472.5">
+      <trigger>Periodic Timer: every 5s</trigger>
+    </triggercontainer>
+    <conditioncontainer id="t2" x="70.0" y="192.5">Expression: result["status"] == "ok"</conditioncontainer>
+    <actioncontainer id="t3" x="70.0" y="-122.5">HTTP Request: GET http://{host}:{port}/queue   store in response</actioncontainer>
+    <actioncontainer id="t4" x="70.0" y="52.5">Script: result = fromJSON(response); text = ""; phone = ""; if(result["status"] == "ok") { text = result["message"]; phone = result["phone"]; }</actioncontainer>
+    <actioncontainer id="t5" x="70.0" y="1067.5">Show Home Screen</actioncontainer>
+    <actioncontainer id="t6" x="70.0" y="-297.5">Script: host = '192.168.5.175'; port = 8083;</actioncontainer>
+    <actioncontainer id="t7" x="70.0" y="402.5">Open URL in Browser: https://wa.me/{phone}</actioncontainer>
+    <actioncontainer id="t8" x="70.00002" y="857.5">HTTP Request: POST http://{host}:{port}/set_status application/x-www-form-urlencoded id={result["id"]} store in response</actioncontainer>
+    <actioncontainer id="t9" x="70.0" y="612.5">Control UI whatasp send</actioncontainer>
+    <connection from="t1" to="t6" type="NORMAL" sourcePosition="SOUTH" targetPosition="NORTH" />
+    <connection from="t2" to="t7" type="TRUE" sourcePosition="SOUTH" targetPosition="NORTH" />
+    <connection from="t3" to="t4" type="NORMAL" sourcePosition="SOUTH" targetPosition="NORTH" />
+    <connection from="t4" to="t2" type="NORMAL" sourcePosition="SOUTH" targetPosition="NORTH" />
+    <connection from="t6" to="t3" type="NORMAL" sourcePosition="SOUTH" targetPosition="NORTH" />
+    <connection from="t7" to="t9" type="NORMAL" sourcePosition="SOUTH" targetPosition="NORTH" />
+    <connection from="t8" to="t5" type="NORMAL" sourcePosition="SOUTH" targetPosition="NORTH" />
+    <connection from="t9" to="t8" type="NORMAL" sourcePosition="SOUTH" targetPosition="NORTH" />
+  </flow>
+</data>
